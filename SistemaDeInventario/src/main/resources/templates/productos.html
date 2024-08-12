@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Mi Aplicación - Lista de Productos</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <style>
+        body {
+            padding-top: 70px;
+            background-color: #f8f9fa;
+        }
+        .navbar {
+            background-color: #0033A0;
+        }
+        .navbar-brand {
+            color: #FFD700 !important;
+            font-weight: bold;
+        }
+        .navbar-nav .nav-link.active {
+            font-weight: bold;
+        }
+        .navbar-nav .nav-link {
+            color: #FFD700 !important;
+        }
+        .container {
+            max-width: 1200px;
+            margin: auto;
+        }
+        .table-container {
+            margin-top: 40px;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            border: 5px solid #FFDD00;
+        }
+        .table thead {
+            background-color: #0033A0;
+            color: #ffffff;
+        }
+        .table tbody tr:nth-child(odd) {
+            background-color: #f2f2f2;
+        }
+        .table tbody tr:nth-child(even) {
+            background-color: #ffffff;
+        }
+        footer {
+            background-color: #0033A0;
+            color: white;
+            padding: 15px 0;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+        }
+        footer a {
+            color: #FFDD00;
+        }
+        .colombian-flag {
+            height: 20px;
+            width: 30px;
+            background: linear-gradient(90deg, #FFD700 33.3%, #0033A0 33.3%, #0033A0 66.6%, #CE1126 66.6%);
+            border: 1px solid #000;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg fixed-top">
+    <div class="container">
+        <a class="navbar-brand" th:href="@{/}">Mi Aplicación</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/}">Inicio</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/categoria}">Categorías</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/producto}">Productos</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/marca}">Marcas</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Contacto</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container text-center">
+    <div>
+        <h1>Lista de Productos <span class="colombian-flag"></span></h1>
+        <br>
+        <div class="table-container">
+            <table class="table table-bordered table-hover">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Precio</th>
+                    <th>Categoría</th>
+                    <th>Acciones</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="producto : ${listarProductos}">
+                    <td th:text="${producto.id}"></td>
+                    <td th:text="${producto.name}"></td>
+                    <td th:text="${producto.pricio}"></td>
+                    <td th:text="${producto.categoria.name}"></td>
+                    <td>
+                        <a th:href="@{'/producto/editar/' + ${producto.id}}" class="btn btn-info">Editar</a>
+                        &nbsp;&nbsp;
+                        <a th:href="@{'/producto/eliminar/' + ${producto.id}}" class="btn btn-danger">Eliminar</a>
+                        &nbsp;&nbsp;
+                        <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#detalleModal" data-id="${producto.id}">Detalles</button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<footer class="text-center">
+    <div class="container">
+        <p>&copy; 2024 Mi Aplicación de Inventario. Todos los derechos reservados. <span class="colombian-flag"></span></p>
+        <p><a href="#">Política de Privacidad</a> | <a href="#">Términos de Uso</a></p>
+    </div>
+</footer>
+
+<!-- Modal -->
+<div class="modal fade" id="detalleModal" tabindex="-1" aria-labelledby="detalleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="detalleModalLabel">Detalles del Producto</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <ul id="detalle-lista">
+                    <!-- Los detalles serán inyectados aquí por JavaScript -->
+                </ul>
+                <div id="sin-detalles" style="display: none;">
+                    <p>No hay detalles disponibles para este producto.</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
+        integrity="sha384-IQsoLXl10lgc5POTgcVbGA8yemf6i24q1vEoP1Y1zMYYxFQcHeIvYy/lRRH+8nbT"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
+        integrity="sha384-cVKIPhGkGE6QrHxT/xAOlQ9WITIbK4Q1ZTQvP8cItxg2cYdLflpPpNXJP/93B0tG"
+        crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        $('#detalleModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget); // Button that triggered the modal
+            var productoId = button.data('id'); // Extract info from data-* attributes
+
+            $.ajax({
+                url: '/producto/detalles/' + productoId,
+                method: 'GET',
+                success: function(data) {
+                    console.log('Respuesta del servidor:', data); // Para depuración
+
+                    var detallesLista = $('#detalle-lista');
+                    var sinDetalles = $('#sin-detalles');
+                    detallesLista.empty();
+
+                    if (data.detalles && data.detalles.length > 0) {
+                        data.detalles.forEach(function(detalle) {
+                            console.log('Detalle:', detalle); // Para depuración
+
+                            var li = $('<li></li>').text(detalle.name + ': ' + detalle.valor);
+                            detallesLista.append(li);
+                        });
+                        sinDetalles.hide();
+                        detallesLista.show();
+                    } else {
+                        detallesLista.hide();
+                        sinDetalles.show();
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error al obtener detalles del producto:', error);
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>

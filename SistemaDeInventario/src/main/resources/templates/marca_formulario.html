@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Mi Aplicación</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <style>
+        body {
+            padding-top: 70px;
+            background-color: #f8f9fa;
+        }
+        .navbar {
+            background-color: #0033A0;
+        }
+        .navbar-brand {
+            color: #FFD700 !important;
+            font-weight: bold;
+        }
+        .navbar-nav .nav-link.active {
+            font-weight: bold;
+        }
+        .navbar-nav .nav-link {
+            color: #FFD700 !important;
+        }
+        .container {
+            max-width: 1200px;
+            margin: auto;
+        }
+        .form-container {
+            margin-top: 40px;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            border: 2px solid #FFDD00;
+        }
+        .form-group label {
+            font-weight: bold;
+        }
+        .form-control {
+            margin-bottom: 10px;
+        }
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+        .btn-primary:hover {
+            background-color: #0069d9;
+            border-color: #0062cc;
+        }
+        footer {
+            background-color: #0033A0;
+            color: white;
+            padding: 15px 0;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+        }
+        footer a {
+            color: #FFDD00;
+        }
+        .colombian-flag {
+            height: 20px;
+            width: 30px;
+            background: linear-gradient(90deg, #FFD700 33.3%, #0033A0 33.3%, #0033A0 66.6%, #CE1126 66.6%);
+            border: 1px solid #000;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg fixed-top">
+    <div class="container">
+        <a class="navbar-brand" th:href="@{/}">Mi Aplicación</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/}">Inicio</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownCategorias" role="button"
+                       data-bs-toggle="dropdown" aria-expanded="false">
+                        Categorías
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownCategorias">
+                        <li th:each="categoria : ${listaCategorias}">
+                            <a class="dropdown-item" th:href="@{/categoria/{id}(id=${categoria.id})}" th:text="${categoria.name}"></a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMarcas" role="button"
+                       data-bs-toggle="dropdown" aria-expanded="false">
+                        Marcas
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownMarcas">
+                        <li th:each="marca : ${listaMarcas}">
+                            <a class="dropdown-item" th:href="@{/marca/{id}(id=${marca.id})}" th:text="${marca.name}"></a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Contacto</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container text-center">
+    <div class="form-container">
+        <h1 th:if="${marca.id==null}">Registro de Marca <span class="colombian-flag"></span></h1>
+        <h1 th:unless="${marca.id==null}">Editar Marca <span class="colombian-flag"></span></h1>
+        <form th:action="@{/marca/guardar}" th:object="${marca}" method="post" style="max-width: 600px; margin: 0 auto;">
+            <input type="hidden" th:field="*{id}"/>
+
+            <div class="mb-3">
+                <label for="nombre" class="form-label">Nombre de la Marca:</label>
+                <input type="text" class="form-control" id="nombre" th:field="*{name}" placeholder="Nombre de la marca" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="categorias" class="form-label">Seleccione una o más categorías:</label>
+                <select class="form-control" id="categorias" th:field="*{categorias}" multiple="multiple" required>
+                    <option th:each="categoria : ${listaCategoria}" th:value="${categoria.id}" th:text="${categoria.name}"></option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Guardar</button>
+        </form>
+    </div>
+</div>
+
+<footer class="text-center">
+    <div class="container">
+        <p>&copy; 2024 Mi Aplicación de Inventario. Todos los derechos reservados. <span class="colombian-flag"></span></p>
+        <p><a href="#">Política de Privacidad</a> | <a href="#">Términos de Uso</a></p>
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
+        integrity="sha384-IQsoLXl10lgc5POTgcVbGA8yemf6i24q1vEoP1Y1zMYYxFQcHeIvYy/lRRH+8nbT"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
+        integrity="sha384-cVKIPhGkGE6QrHxT/xAOlQ9WITIbK4Q1ZTQvP8cItxg2cYdLflpPpNXJP/93B0tG"
+        crossorigin="anonymous"></script>
+</body>
+</html>
