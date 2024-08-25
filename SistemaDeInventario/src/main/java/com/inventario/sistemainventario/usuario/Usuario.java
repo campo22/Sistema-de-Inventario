@@ -25,6 +25,9 @@ public class Usuario {
     @JoinTable(name = "usuario_rol", joinColumns = @JoinColumn(name = "usuario_id"), inverseJoinColumns = @JoinColumn(name = "rol_id"))
     private Set<Rol> rol = new HashSet<>();
 
+    public Usuario( Integer id) {
+    }
+
 
     public String getName() {
         return name;
@@ -96,4 +99,10 @@ public class Usuario {
     public Usuario() {
     }
 
+    @Override
+    public String toString() {
+        return "Usuario{" +
+                "name='" + name + '\'' +
+                '}';
+    }
 }

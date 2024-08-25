@@ -46,6 +46,10 @@ public class Producto {
         this.name = name;
     }
 
+    public Producto(Integer  id) {
+        this.id = id;
+    }
+
     public Integer getId() {
         return id;
     }
@@ -93,5 +97,10 @@ public class Producto {
         this.detalles.add(new producto_detalles(id,name,valor,this));
     }
 
-
+    @Override
+    public String toString() {
+        return "Producto{" +
+                "name='" + name + '\'' +
+                '}';
+    }
 }
